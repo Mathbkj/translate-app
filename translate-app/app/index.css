@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@theme {
+  --font-*: initial;
+  --color-*: initial;
+  --font-dm-sans: "DM Sans", sans-serif;
+  --color-light: #f9fafb;
+  --color-text-secondary: #4d5562;
+  --color-gray-light: #d2d5da;
+  --color-text-primary: #394150;
+  --color-bg-dark: #040711;
+  --color-primary: #263fa9;
+  --color-primary-light: #7ca9f3;
+  --color-overlay-darker: #121826cc;
+  --color-overlay-dark: #212936cc;
+}
+body {
+  background-image: image-set(
+    url("./assets/hero_img-sm.jpg") 1x,
+    url("./assets/hero_img.jpg") 2x
+  );
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh;
+}
+button {
+  @apply cursor-pointer;
+}
