@@ -57,9 +57,8 @@ app.post(
       .insert({ username, hashed_pass: hashedPassword });
     // If there's an error during registration, return an error message
     if (error) {
-      return res.status(500).json({
-        message: "Error registering user",
-        error: "User already exists or another error ocurred.",
+      return res.status(409).json({
+        message: "User already exists or the server is experiencing issues",
       });
     }
     res.status(201).json({ message: "User registered successfully" });
