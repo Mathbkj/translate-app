@@ -5,10 +5,8 @@ import { jwtVerify, SignJWT } from "jose";
 import bcrypt from "bcrypt";
 import { supabase } from "./db/client.ts";
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(cors({ origin: [process.env.FRONTEND_URL!] }));
 
 const textEncoder = new TextEncoder();
@@ -46,19 +44,20 @@ app.post(
       { username: string; password: string },
       never
     >,
-    res: express.Response
+    res: express.Response<{ message: string }>
   ) => {
     const { username, password } = req.body;
     // Hash the password before storing it in the database
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password.trim(), 10);
     // Store the new user in the database
     const { error } = await supabase
       .from("users")
-      .insert({ username, hashed_pass: hashedPassword });
+      .insert({ username: username.trim(), hashed_pass: hashedPassword });
     // If there's an error during registration, return an error message
     if (error) {
       return res.status(409).json({
-        message: "User already exists or the server is experiencing issues",
+        message:
+          "One of the credentials is already taken or the server might be experiencing issues",
       });
     }
     res.status(201).json({ message: "User registered successfully" });
@@ -74,36 +73,38 @@ app.post(
       { username: string; password: string },
       never
     >,
-    res: express.Response
+    res: express.Response<{ message: string; token?: string }>
   ) => {
     // Get the user login information
     const { username, password } = req.body;
-
     // Check whether the user exists in the database
     const { data: user } = await supabase
       .from("users")
       .select("username, hashed_pass")
-      .eq("username", username.trim());
+      .eq("username", username.trim())
+      .single();
     // If the user does not exist, return an error with unauthorized status
-    if (
-      user?.length === 0 ||
-      bcrypt.compareSync(password, user?.[0].hashed_pass.trim()) === false
-    )
-      return res.status(401).json({ message: "Invalid credentials" });
-    // Generate a session token for the user, which expires in 15 minutes
+    if (!user) return res.status(401).json({ message: "Invalid user" });
 
-    const token = await new SignJWT({ username })
-      .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime("15m")
-      .sign(secret);
+    // Compare password - use await instead of callback
+    bcrypt.compare(password.trim(), user.hashed_pass, async (err, isSame) => {
+      if (err) throw err;
+      if (!isSame) return res.status(401).json({ message: "Invalid password" });
 
-    res.json({ token });
+      // Generate a session token for the user, which expires in 15 minutes
+      const token = await new SignJWT({ username: user.username })
+        .setProtectedHeader({ alg: "HS256" })
+        .setExpirationTime("15m")
+        .sign(secret);
+
+      res.status(200).json({ token, message: "Login successful" });
+    });
   }
 );
 // GET /app
 app.get("/app", authToken, (req, res) => {
   res.json({ message: "You have accessed a protected route" });
 });
-app.listen(process.env.PORT, (error) => {
+app.listen(process.env.PORT, error => {
   if (error) console.error(error.message);
 });

@@ -12,6 +12,8 @@
   --color-primary-light: #7ca9f3;
   --color-overlay-darker: #121826cc;
   --color-overlay-dark: #212936cc;
+  --color-error: #dc2626;
+  --color-error-light: #fca5a5;
 }
 body {
   background-image: image-set(

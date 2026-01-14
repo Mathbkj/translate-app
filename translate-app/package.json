@@ -12,10 +12,12 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.90.1",
     "@tailwindcss/vite": "^4.1.18",
+    "@tanstack/react-form": "^1.27.7",
     "@tanstack/react-router": "^1.147.3",
     "@tanstack/react-router-devtools": "^1.149.0",
     "franc-min": "^6.2.0",
     "isbot": "^5",
+    "lucide-react": "^0.562.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-hot-toast": "^2.6.0",
