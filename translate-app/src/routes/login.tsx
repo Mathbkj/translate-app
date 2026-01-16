@@ -1,4 +1,8 @@
-import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  useNavigate,
+  useSearch,
+} from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import toast, { Toaster } from "react-hot-toast";
 import { useState } from "react";
@@ -6,6 +10,7 @@ import { EyeShow } from "src/components/ui/EyeShow";
 import { EyeHide } from "src/components/ui/EyeHide";
 import type { AuthRegisterResponse } from "src/types/api/AuthRegisterResponse";
 import type { AuthLoginResponse } from "src/types/api/AuthLoginResponse";
+import { useAuth } from "src/hooks/useAuth";
 
 export const Route = createFileRoute("/login")({ component: Login });
 
@@ -28,9 +33,7 @@ function Login() {
         if (value.password.trim().length < 1) {
           errors.password = "Password is required";
         }
-        return Object.keys(errors).length > 0
-          ? { fields: errors }
-          : undefined;
+        return Object.keys(errors).length > 0 ? { fields: errors } : undefined;
       },
       onSubmitAsync: async ({ value }) => {
         const response = await fetch(
@@ -48,25 +51,27 @@ function Login() {
         if (!response.ok) {
           const body: AuthLoginResponse = await response.json();
           return {
-            form: body.message || 'Invalid username or password.',
+            form: body.message || "Invalid username or password.",
             fields: {
               password: body.message,
-            }
-          }
+            },
+          };
         }
 
         const data: AuthLoginResponse = await response.json();
+        if (!data.token)
+          toast.error("Error verifying login. Please try again.");
         // Store token or session data
         if (data.token) {
           toast.success(data.message);
           // Redirect to the page they were trying to access, or home
+          localStorage.setItem("authToken", data.token);
           setTimeout(() => {
-            navigate({ to: "../auth" })
+            navigate({ to: "../auth" });
           }, 1000);
-          return data.token;
         }
-      }
-    }
+      },
+    },
   });
 
   return (
@@ -98,9 +103,7 @@ function Login() {
         >
           <div className="rounded-md shadow-sm space-y-2">
             {/* Username Field */}
-            <form.Field
-              name="username"
-            >
+            <form.Field name="username">
               {(field) => (
                 <div>
                   <label htmlFor="username" className="sr-only">
@@ -117,7 +120,10 @@ function Login() {
                     placeholder="Username"
                   />
                   {field.state.meta.errors && (
-                    <span aria-live="assertive" className="text-error text-sm mt-1">
+                    <span
+                      aria-live="assertive"
+                      className="text-error text-sm mt-1"
+                    >
                       {field.state.meta.errors.join(", ")}
                     </span>
                   )}
@@ -126,9 +132,7 @@ function Login() {
             </form.Field>
 
             {/* Password Field */}
-            <form.Field
-              name="password"
-            >
+            <form.Field name="password">
               {(field) => (
                 <div>
                   <label htmlFor="password" className="sr-only">
@@ -148,19 +152,20 @@ function Login() {
                     />
                     <button
                       type="button"
-                      onClick={() => setShowPassword(prev => !prev)}
+                      onClick={() => setShowPassword((prev) => !prev)}
                       className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
-                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
                     >
-                      {showPassword ? (
-                        <EyeShow />
-                      ) : (
-                        <EyeHide />
-                      )}
+                      {showPassword ? <EyeShow /> : <EyeHide />}
                     </button>
                   </div>
                   {field.state.meta.errors && (
-                    <span aria-live="assertive" className="text-error text-sm mt-1">
+                    <span
+                      aria-live="assertive"
+                      className="text-error text-sm mt-1"
+                    >
                       {field.state.meta.errors.join(", ")}
                     </span>
                   )}

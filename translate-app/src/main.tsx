@@ -7,9 +7,19 @@ import "./index.css";
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
+import type { AuthContext } from "./types/AuthContext";
+import { useAuth } from "./hooks/useAuth";
 
-// Create a new router instance
-const router = createRouter({ routeTree });
+// Create a new router instance with placeholder context
+const router = createRouter({
+  routeTree,
+  context: {
+    auth: {
+      isAuthenticated: false,
+      user: null,
+    }, // Will be provided in React component
+  },
+});
 
 // Register the router instance for type safety
 declare module "@tanstack/react-router" {
@@ -18,13 +28,18 @@ declare module "@tanstack/react-router" {
   }
 }
 
+function App() {
+  const authContext = useAuth() as AuthContext;
+  return <RouterProvider router={router} context={authContext} />;
+}
+
 // Render the app
 const rootElement = document.getElementById("root")!;
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <RouterProvider router={router} />
+      <App />
     </StrictMode>
   );
 }

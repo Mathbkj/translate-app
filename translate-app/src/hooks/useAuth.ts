@@ -1,20 +1,23 @@
-// Hook to manage authentication state
+import { useRouter } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import type { AuthContext } from "src/types/AuthContext";
+import { getUsername } from "src/lib/getUserId";
 
-// import { useRouter } from "@tanstack/react-router";
-// import { useEffect, useState } from "react";
+export function useAuth(): AuthContext | null {
+  const [data, setData] = useState<AuthContext | null>(null);
 
-// function useAuth() {
-//   const router = useRouter();
-//   const [user, setUser] = useState<null>(null);
+  useEffect(() => {
+    const unsubscribe = () => {
+      const token = localStorage.getItem("authToken");
+      if (token) {
+        setData((prev) => ({
+          ...prev,
+          auth: { isAuthenticated: true, user: getUsername(token) },
+        }));
+      }
+    };
+    return unsubscribe;
+  }, []);
 
-//   useEffect(() => {
-//     const unsubscribe = auth.onAuthStateChanged(user => {
-//       setUser(user);
-//       router.invalidate();
-//     });
-
-//     return unsubscribe;
-//   }, []);
-
-//   return user;
-// }
+  return data;
+}

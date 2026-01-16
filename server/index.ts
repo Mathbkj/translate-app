@@ -7,13 +7,18 @@ import { supabase } from "./db/client.ts";
 const app = express();
 
 app.use(express.json());
-app.use(cors({ origin: [process.env.FRONTEND_URL!] }));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL!,
+    credentials: true,
+  })
+);
 
 const textEncoder = new TextEncoder();
 const secret = textEncoder.encode(process.env.JWT_SECRET!);
 
 /* Middleware Function -> Check whether the user is allowed to access protected routes, in
- other wors, verify if the user is authenticated to access the protected resource*/
+ other words, verify if the user is authenticated to access the protected resource*/
 async function authToken(
   req: express.Request,
   res: express.Response,
@@ -102,9 +107,13 @@ app.post(
   }
 );
 // GET /app
-app.get("/app", authToken, (req, res) => {
-  res.json({ message: "You have accessed a protected route" });
-});
-app.listen(process.env.PORT, error => {
+app.get(
+  "/verify",
+  authToken,
+  (_req, res: express.Response<{ message: string }>) => {
+    res.status(200).json({ message: "Token succesfully validated" });
+  }
+);
+app.listen(process.env.PORT, (error) => {
   if (error) console.error(error.message);
 });

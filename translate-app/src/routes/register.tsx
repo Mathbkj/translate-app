@@ -1,4 +1,8 @@
-import { createFileRoute, useNavigate, useRouterState } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  useNavigate,
+  useRouterState,
+} from "@tanstack/react-router";
 import { useForm, useStore } from "@tanstack/react-form";
 import toast, { Toaster } from "react-hot-toast";
 import type { AuthRegisterResponse } from "src/types/api/AuthRegisterResponse";
@@ -10,12 +14,12 @@ import { Loader } from "lucide-react";
 export const Route = createFileRoute("/register")({ component: Register });
 
 function Register() {
-  const navigate = useNavigate({ from: "/register" })
+  const navigate = useNavigate({ from: "/register" });
   const isNavigating = useRouterState({
-    select: (state) => state.isLoading
-  })
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    select: (state) => state.isLoading,
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const form = useForm({
     defaultValues: {
       username: "",
@@ -32,15 +36,15 @@ function Register() {
         if (value.password.trim().length < 6) {
           errors.password = "Password must be at least 6 characters";
         }
-        if (value.password.toLowerCase().trim() !== formApi.getFieldValue("confirmPassword").toLocaleLowerCase().trim()) {
+        if (
+          value.password.toLowerCase().trim() !==
+          formApi.getFieldValue("confirmPassword").toLocaleLowerCase().trim()
+        ) {
           errors.confirmPassword = "Passwords do not match";
         }
-        return Object.keys(errors).length > 0
-          ? { fields: errors }
-          : undefined;
+        return Object.keys(errors).length > 0 ? { fields: errors } : undefined;
       },
       onSubmitAsync: async ({ value }) => {
-
         const response = await fetch(
           `${import.meta.env.VITE_BACKEND_URL}/register`,
           {
@@ -56,25 +60,24 @@ function Register() {
         if (!response.ok) {
           const body: AuthRegisterResponse = await response.json();
           return {
-            form: 'Invalid or existing username. Please choose another.',
+            form: "Invalid or existing username. Please choose another.",
             fields: {
               confirmPassword: body.message,
-            }
-          }
+            },
+          };
         }
         const body: AuthRegisterResponse = await response.json();
 
         toast.success(body.message);
         setTimeout(() => {
           navigate({ to: "/login" });
-        }, 1000)
-      }
-
-    }
+        }, 1000);
+      },
+    },
   });
 
   if (isNavigating) {
-    return <h1>Loading...</h1>
+    return <h1>Loading...</h1>;
   }
   return (
     <div className="min-h-screen text-light flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -105,8 +108,7 @@ function Register() {
         >
           <div className="rounded-md shadow-sm space-y-2">
             {/* Username Field */}
-            <form.Field
-              name="username"        >
+            <form.Field name="username">
               {(field) => (
                 <div>
                   <label htmlFor="username" className="sr-only">
@@ -123,7 +125,10 @@ function Register() {
                     placeholder="Username"
                   />
                   {field.state.meta.errors && (
-                    <span aria-live="assertive" className="text-error text-sm mt-1">
+                    <span
+                      aria-live="assertive"
+                      className="text-error text-sm mt-1"
+                    >
                       {field.state.meta.errors.join(", ")}
                     </span>
                   )}
@@ -132,9 +137,7 @@ function Register() {
             </form.Field>
 
             {/* Password Field */}
-            <form.Field
-              name="password"
-            >
+            <form.Field name="password">
               {(field) => (
                 <div>
                   <label htmlFor="password" className="sr-only">
@@ -154,20 +157,20 @@ function Register() {
                     />
                     <button
                       type="button"
-                      onClick={() => setShowPassword(prev => !prev)}
+                      onClick={() => setShowPassword((prev) => !prev)}
                       className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
-                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
                     >
-                      {showPassword ? (
-                        <EyeShow />
-                      ) : (
-                        <EyeHide />
-                      )}
+                      {showPassword ? <EyeShow /> : <EyeHide />}
                     </button>
-
                   </div>
                   {field.state.meta.errors && (
-                    <span aria-live="assertive" className="text-error text-sm mt-1">
+                    <span
+                      aria-live="assertive"
+                      className="text-error text-sm mt-1"
+                    >
                       {field.state.meta.errors.join(", ")}
                     </span>
                   )}
@@ -177,7 +180,7 @@ function Register() {
 
             {/* Confirm Password Field - Links to password field */}
             <form.Field
-              validators={{ onChangeListenTo: ['password'] }}
+              validators={{ onChangeListenTo: ["password"] }}
               name="confirmPassword"
             >
               {(field) => (
@@ -199,19 +202,22 @@ function Register() {
                     />
                     <button
                       type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
                       className="absolute inset-y-0 right-0 pr-3 flex not-disabled:cursor-pointer items-center text-gray-500 hover:text-gray-700"
-                      aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                      aria-label={
+                        showConfirmPassword ? "Hide password" : "Show password"
+                      }
                     >
-                      {showConfirmPassword ? (
-                        <EyeShow />
-                      ) : (
-                        <EyeHide />
-                      )}
+                      {showConfirmPassword ? <EyeShow /> : <EyeHide />}
                     </button>
                   </div>
                   {field.state.meta.errors && (
-                    <span aria-live="assertive" className="text-error text-sm mt-1">
+                    <span
+                      aria-live="assertive"
+                      className="text-error text-sm mt-1"
+                    >
                       {field.state.meta.errors.join(", ")}
                     </span>
                   )}
@@ -230,7 +236,11 @@ function Register() {
                   disabled={!canSubmit}
                   className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? <Loader className="animate-spin " /> : "Create account"}
+                  {isSubmitting ? (
+                    <Loader className="animate-spin " />
+                  ) : (
+                    "Create account"
+                  )}
                 </button>
               )}
             </form.Subscribe>
