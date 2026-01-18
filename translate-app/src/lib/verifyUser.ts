@@ -1,7 +1,7 @@
-import toast from "react-hot-toast";
+// Verify user and authorize its access to protected routes
+
 import type { AuthVerifyResponse } from "src/types/api/AuthVerifyResponse";
 
-// Verify user and authorize its access to protected routes
 export async function verifyUser(token: string) {
   let message = "";
   const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/verify`, {

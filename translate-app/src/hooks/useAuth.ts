@@ -1,4 +1,3 @@
-import { useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import type { AuthContext } from "src/types/AuthContext";
 import { getUsername } from "src/lib/getUserId";
@@ -12,7 +11,10 @@ export function useAuth(): AuthContext | null {
       if (token) {
         setData((prev) => ({
           ...prev,
-          auth: { isAuthenticated: true, user: getUsername(token) },
+          auth: {
+            isAuthenticated: true,
+            user: getUsername(token),
+          },
         }));
       }
     };

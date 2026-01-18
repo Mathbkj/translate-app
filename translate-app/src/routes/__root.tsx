@@ -16,7 +16,7 @@ const RootLayout = () => (
         activeOptions={{ exact: true }}
       >
         Home
-      </Link>{" "}
+      </Link>
       <Link
         to="/register"
         activeProps={{ style: { fontWeight: "bold" } }}
@@ -24,7 +24,11 @@ const RootLayout = () => (
       >
         Register
       </Link>
-      <Link to="/login" activeProps={{ style: { fontWeight: "bold" } }}>
+      <Link
+        to="/login"
+        activeProps={{ style: { fontWeight: "bold" } }}
+        preload="intent"
+      >
         Login
       </Link>
     </div>

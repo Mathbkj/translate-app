@@ -40,6 +40,6 @@ if (!rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <App />
-    </StrictMode>
+    </StrictMode>,
   );
 }
