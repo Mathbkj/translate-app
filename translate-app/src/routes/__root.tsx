@@ -1,43 +1,19 @@
 import {
-  createRootRoute,
   createRootRouteWithContext,
-  Link,
-  Outlet,
+  Outlet
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import type { AuthContext } from "src/types/AuthContext";
+import type { IAuthContext } from "@/types/IAuthContext";
+import { Navbar } from "@/components/Navbar";
 
 const RootLayout = () => (
   <>
-    <div className="p-2 flex gap-2">
-      <Link
-        to="/"
-        activeProps={{ style: { fontWeight: "bold" } }}
-        activeOptions={{ exact: true }}
-      >
-        Home
-      </Link>
-      <Link
-        to="/register"
-        activeProps={{ style: { fontWeight: "bold" } }}
-        preload="intent"
-      >
-        Register
-      </Link>
-      <Link
-        to="/login"
-        activeProps={{ style: { fontWeight: "bold" } }}
-        preload="intent"
-      >
-        Login
-      </Link>
-    </div>
-    <hr />
+    <Navbar />
     <Outlet />
     <TanStackRouterDevtools />
   </>
 );
 
-export const Route = createRootRouteWithContext<AuthContext>()({
+export const Route = createRootRouteWithContext<IAuthContext>()({
   component: RootLayout,
 });

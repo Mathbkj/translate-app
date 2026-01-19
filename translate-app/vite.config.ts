@@ -14,4 +14,14 @@ export default defineConfig({
     tailwindcss(),
     tsconfigPaths(),
   ],
+  resolve: {
+    alias: {
+      "@/contexts/*": "./src/contexts/*",
+      "@/components/*": "./src/components/*",
+      "@/ui/*": "./src/components/ui/*",
+      "@/lib/*": "./src/lib/*",
+      "@/hooks/*": "./src/hooks/*",
+      "@/types/*": "./src/types/*",
+    },
+  },
 });

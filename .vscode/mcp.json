@@ -1,9 +1,13 @@
 {
-	"servers": {
-		"tanstack-mcp": {
-			"url": "https://tanstack.com/api/mcp",
-			"type": "http"
-		}
-	},
-	"inputs": []
+  "servers": {
+    "tanstack-mcp": {
+      "url": "https://tanstack.com/api/mcp",
+      "type": "http"
+    },
+    "shadcn": {
+      "command": "npx",
+      "args": ["shadcn@latest", "mcp"]
+    }
+  },
+  "inputs": []
 }

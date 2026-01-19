@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { EyeShow } from "src/components/ui/EyeShow";
 import { EyeHide } from "src/components/ui/EyeHide";
 import { Loader } from "lucide-react";
+import { Spinner } from "@/components/ui/Spinner";
 
 export const Route = createFileRoute("/__log/register")({
   component: Register,
@@ -239,7 +240,7 @@ function Register() {
                   className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (
-                    <Loader className="animate-spin " />
+                    <Spinner />
                   ) : (
                     "Create account"
                   )}

@@ -11,7 +11,7 @@ app.use(
   cors({
     origin: process.env.FRONTEND_URL!,
     credentials: true,
-  }),
+  })
 );
 
 const textEncoder = new TextEncoder();
@@ -22,7 +22,7 @@ const secret = textEncoder.encode(process.env.JWT_SECRET!);
 async function authToken(
   req: express.Request,
   res: express.Response,
-  next: express.NextFunction,
+  next: express.NextFunction
 ) {
   //Get the token from the authorization header
   const authHeader = req.headers["authorization"];
@@ -49,7 +49,7 @@ app.post(
       { username: string; password: string },
       never
     >,
-    res: express.Response<{ message: string }>,
+    res: express.Response<{ message: string }>
   ) => {
     const { username, password } = req.body;
     // Hash the password before storing it in the database
@@ -66,19 +66,14 @@ app.post(
       });
     }
     res.status(201).json({ message: "User registered successfully" });
-  },
+  }
 );
 // POST /login
 app.post(
   "/login",
   async (
-    req: express.Request<
-      never,
-      never,
-      { username: string; password: string },
-      never
-    >,
-    res: express.Response<{ message: string; token?: string }>,
+    req: express.Request<{ username: string; password: string }>,
+    res: express.Response<{ message: string; token?: string }>
   ) => {
     // Get the user login information
     const { username, password } = req.body;
@@ -104,7 +99,7 @@ app.post(
 
       res.status(200).json({ token, message: "Login successful" });
     });
-  },
+  }
 );
 // POST /logout
 app.post(
@@ -112,7 +107,7 @@ app.post(
   authToken,
   (_req, res: express.Response<{ message: string }>) => {
     res.status(200).json({ message: "Logout successful" });
-  },
+  }
 );
 // GET /verify
 app.get(
@@ -120,8 +115,8 @@ app.get(
   authToken,
   (_req, res: express.Response<{ message: string }>) => {
     res.status(200).json({ message: "Token succesfully validated" });
-  },
+  }
 );
-app.listen(process.env.PORT, (error) => {
+app.listen(process.env.PORT, error => {
   if (error) console.error(error.message);
 });

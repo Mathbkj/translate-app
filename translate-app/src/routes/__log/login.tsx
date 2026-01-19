@@ -1,26 +1,35 @@
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate, useRouter, useRouterState } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import toast, { Toaster } from "react-hot-toast";
 import { useState } from "react";
-import { EyeShow } from "src/components/ui/EyeShow";
-import { EyeHide } from "src/components/ui/EyeHide";
-import type { AuthLoginResponse } from "src/types/api/AuthLoginResponse";
+import { EyeShow } from "@/ui/EyeShow";
+import { EyeHide } from "@/ui/EyeHide";
+import type { AuthLoginResponse } from "@/types/api/AuthLoginResponse";
+import { useAuth } from "src/hooks/useAuth";
+import { sleep } from "@/lib/utils";
+import { Spinner } from "@/components/ui/Spinner";
 
 export const Route = createFileRoute("/__log/login")({
   validateSearch: (search) => ({
-    redirect: (search.redirect as string) || "/",
+    redirect: (search.redirect as string) || "/app",
   }),
   beforeLoad: async ({ context, search }) => {
     if (context.auth.isAuthenticated) {
-      redirect({ to: search.redirect });
+      console.log("Authenticated", search.redirect)
+      redirect({ to: search.redirect, throw: true });
     }
   },
   component: Login,
 });
 
 function Login() {
+  const { auth } = useAuth();
+  const router = useRouter();
+  const isLoading = useRouterState({ select: (s) => s.isLoading });
   const navigate = useNavigate({ from: Route.fullPath });
   const [showPassword, setShowPassword] = useState(false);
+
+  const search = Route.useSearch();
 
   const form = useForm({
     defaultValues: {
@@ -30,7 +39,6 @@ function Login() {
     validators: {
       onChange: ({ value }) => {
         const errors: Record<string, string> = {};
-
         if (value.username.trim().length < 1) {
           errors.username = "Username is required";
         }
@@ -40,43 +48,23 @@ function Login() {
         return Object.keys(errors).length > 0 ? { fields: errors } : undefined;
       },
       onSubmitAsync: async ({ value }) => {
-        const response = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/login`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              username: value.username,
-              password: value.password,
-            }),
-          },
-        );
-
-        if (!response.ok) {
-          const body: AuthLoginResponse = await response.json();
-          return {
-            form: body.message || "Invalid username or password.",
-            fields: {
-              password: body.message,
-            },
-          };
-        }
-
-        const data: AuthLoginResponse = await response.json();
-        if (!data.token)
-          toast.error("Error verifying login. Please try again.");
-        // Store token or session data
-        if (data.token) {
-          toast.success(data.message);
-          // Redirect to the page they were trying to access, or home
-          localStorage.setItem("authToken", data.token);
-          setTimeout(() => {
-            navigate({ from: Route.fullPath, to: "../app" });
-          }, 1000);
+        try {
+          await auth.login(value.username, value.password);
+          await sleep(250);
+          await router.invalidate();
+          router.history.push(search.redirect);
+        } catch (err) {
+          if (err instanceof Error) {
+            toast.error(err.message);
+          }
         }
       },
     },
   });
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -213,7 +201,7 @@ function Login() {
                   disabled={!canSubmit}
                   className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? "Signing in..." : "Sign in"}
+                  {isSubmitting ? <Spinner /> : "Sign in"}
                 </button>
               )}
             </form.Subscribe>
