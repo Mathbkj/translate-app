@@ -1,4 +1,4 @@
-import TranslateForm from "./TranslateForm";
+import { TranslateForm } from "./translate-form";
 import Logo from "/logo.svg";
 
 function TranslateApp() {

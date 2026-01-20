@@ -1,10 +1,7 @@
-import {
-  createRootRouteWithContext,
-  Outlet
-} from "@tanstack/react-router";
+import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import type { IAuthContext } from "@/types/IAuthContext";
-import { Navbar } from "@/components/Navbar";
+import { Navbar } from "@/components/navbar";
 
 const RootLayout = () => (
   <>

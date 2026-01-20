@@ -1,6 +1,5 @@
-import { use, useEffect, useState } from "react";
+import { use } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
-import { getUsername } from "src/lib/getUserId";
 
 export function useAuth() {
   const context = use(AuthContext);

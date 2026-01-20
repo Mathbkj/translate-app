@@ -50,7 +50,7 @@ export function TranslatePanel({
   const getDisplayName = (lang: Language) => {
     if (lang.hasDropdown && lang.subLanguages) {
       const selectedSub = lang.subLanguages.find(
-        (sub) => sub.code === selectedLanguage
+        (sub) => sub.code === selectedLanguage,
       );
       // Fallback to first sublanguage (e.g., Spanish) instead of "More Languages"
       return selectedSub
@@ -61,7 +61,7 @@ export function TranslatePanel({
   };
 
   return (
-    <div className="rounded-3xl bg-overlay-dark border border-gray-light/20 p-6 backdrop-blur-sm">
+    <div className="rounded-3xl bg-white border border-border shadow-sm p-6">
       {/* Language Selector Pills */}
       <div className="mb-4 flex flex-wrap gap-2">
         {languages.map((lang) => (
@@ -77,14 +77,14 @@ export function TranslatePanel({
               }}
               className={`rounded-full px-4 py-2 text-sm font-medium transition ${
                 !lang.hasDropdown && selectedLanguage === lang.code
-                  ? "bg-text-secondary text-light"
+                  ? "bg-primary text-white"
                   : lang.hasDropdown &&
-                    lang.subLanguages &&
-                    lang.subLanguages.some(
-                      (sub) => sub.code === selectedLanguage
-                    )
-                  ? "bg-text-secondary text-light"
-                  : "text-gray-light hover:bg-text-secondary/50"
+                      lang.subLanguages &&
+                      lang.subLanguages.some(
+                        (sub) => sub.code === selectedLanguage,
+                      )
+                    ? "bg-primary text-white"
+                    : "text-gray-dark hover:bg-surface"
               }`}
             >
               {getDisplayName(lang)}
@@ -95,7 +95,7 @@ export function TranslatePanel({
             {lang.hasDropdown &&
               lang.subLanguages &&
               openDropdown === lang.code && (
-                <div className="absolute top-full mt-2 z-10 bg-overlay-darker border border-gray-light/20 rounded-xl overflow-hidden shadow-lg max-h-80 overflow-y-auto">
+                <div className="absolute top-full mt-2 z-10 bg-white border border-border rounded-xl overflow-hidden shadow-lg max-h-80 overflow-y-auto">
                   {lang.subLanguages.map((subLang) => (
                     <button
                       key={subLang.code}
@@ -106,8 +106,8 @@ export function TranslatePanel({
                       }}
                       className={`w-full px-4 py-2 text-left text-sm font-medium transition ${
                         selectedLanguage === subLang.code
-                          ? "bg-text-secondary text-light"
-                          : "text-gray-light hover:bg-text-secondary/50"
+                          ? "bg-primary text-white"
+                          : "text-gray-dark hover:bg-surface"
                       }`}
                     >
                       {subLang.name}
@@ -120,7 +120,7 @@ export function TranslatePanel({
       </div>
 
       {/* Text Input Area */}
-      <div className="relative border-t pt-2 border-t-gray-light/20 mb-4">
+      <div className="relative border-t pt-2 border-t-border-light mb-4">
         <textarea
           value={text}
           onChange={(e) => {
@@ -129,7 +129,7 @@ export function TranslatePanel({
             }
           }}
           readOnly={isReadOnly}
-          className="min-h-45 w-full resize-none bg-transparent font-bold text-gray-light placeholder-gray-light focus:outline-none"
+          className="min-h-45 w-full resize-none bg-transparent font-bold text-text-primary placeholder-gray-medium focus:outline-none focus:ring-0"
           placeholder={type === "source" ? "Enter text..." : "Translation"}
           maxLength={maxLength}
         />
@@ -142,7 +142,7 @@ export function TranslatePanel({
             type="button"
             onClick={() => onSpeak(text, selectedLanguage)}
             disabled={!text.trim()}
-            className="flex h-10 w-10 border-3 border-text-secondary items-center justify-center rounded-xl bg-overlay-darker transition hover:bg-text-secondary/50 disabled:opacity-40"
+            className="flex h-10 w-10 border-2 border-border items-center justify-center rounded-xl bg-surface transition hover:bg-surface-hover disabled:opacity-40"
             title="Speak"
           >
             <img src={SoundFill} alt="Speak" className="h-5 w-5" />
@@ -151,7 +151,7 @@ export function TranslatePanel({
             type="button"
             onClick={handleCopyClick}
             disabled={!text.trim()}
-            className="flex h-10 w-10 border-3 border-text-secondary items-center justify-center rounded-xl bg-overlay-darker transition hover:bg-text-secondary/50 disabled:opacity-40"
+            className="flex h-10 w-10 border-2 border-border items-center justify-center rounded-xl bg-surface transition hover:bg-surface-hover disabled:opacity-40"
             title={isCopied ? "Copied!" : "Copy"}
           >
             <img
@@ -169,7 +169,7 @@ export function TranslatePanel({
 
         <div className="flex flex-col items-center gap-4">
           {type.trim() === "source" && (
-            <span className="text-sm self-end text-gray-light">
+            <span className="text-sm self-end text-gray-dark">
               {text.length}/{maxLength}
             </span>
           )}
@@ -179,7 +179,7 @@ export function TranslatePanel({
               type="button"
               onClick={onTranslate}
               disabled={text.trim().length < 1}
-              className="flex text-light items-center gap-2 rounded-lg bg-primary px-6 py-2.5 font-medium text-white not-disabled:outline not-disabled:outline-primary-light transition hover:bg-primary-light disabled:brightness-50"
+              className="flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 font-medium text-white shadow-sm transition hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <img src={SortAlfa} alt="" />
               Translate

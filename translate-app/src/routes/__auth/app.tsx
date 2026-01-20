@@ -1,5 +1,12 @@
-import { createFileRoute, isRedirect, redirect, useRouter } from "@tanstack/react-router";
+import TranslateApp from "@/components/translate-app";
+import {
+  createFileRoute,
+  isRedirect,
+  redirect,
+  useRouter,
+} from "@tanstack/react-router";
 import { useEffect } from "react";
+import toast from "react-hot-toast";
 import { useAuth } from "src/hooks/useAuth";
 
 export const Route = createFileRoute("/__auth/app")({
@@ -31,11 +38,5 @@ export const Route = createFileRoute("/__auth/app")({
   component: AppComponent,
 });
 function AppComponent() {
-  const { auth } = useAuth();
-  return (
-    <div>
-      <h2>{auth.user?.username}</h2>
-      <p>Welcome to the authenticated section of the app.</p>
-    </div>
-  );
+  return <TranslateApp />;
 }

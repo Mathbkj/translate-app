@@ -1,21 +1,27 @@
-import { createFileRoute, redirect, useNavigate, useRouter, useRouterState } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  redirect,
+  useNavigate,
+  useRouter,
+  useRouterState,
+} from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import toast, { Toaster } from "react-hot-toast";
 import { useState } from "react";
-import { EyeShow } from "@/ui/EyeShow";
-import { EyeHide } from "@/ui/EyeHide";
+import { EyeShow } from "@/components/ui/eye-show";
+import { EyeHide } from "@/components/ui/eye-hide";
 import type { AuthLoginResponse } from "@/types/api/AuthLoginResponse";
 import { useAuth } from "src/hooks/useAuth";
 import { sleep } from "@/lib/utils";
-import { Spinner } from "@/components/ui/Spinner";
-
+import { Spinner } from "@/components/ui/spinner";
+import { Input } from "@/components/ui/input";
 export const Route = createFileRoute("/__log/login")({
   validateSearch: (search) => ({
     redirect: (search.redirect as string) || "/app",
   }),
   beforeLoad: async ({ context, search }) => {
     if (context.auth.isAuthenticated) {
-      console.log("Authenticated", search.redirect)
+      console.log("Authenticated", search.redirect);
       redirect({ to: search.redirect, throw: true });
     }
   },
@@ -93,7 +99,7 @@ function Login() {
           }}
           className="mt-8 space-y-6"
         >
-          <div className="rounded-md shadow-sm space-y-2">
+          <div className="space-y-4">
             {/* Username Field */}
             <form.Field name="username">
               {(field) => (
@@ -101,14 +107,13 @@ function Login() {
                   <label htmlFor="username" className="sr-only">
                     Username
                   </label>
-                  <input
+                  <Input
                     id="username"
                     name={field.name}
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
                     type="text"
-                    className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     placeholder="Username"
                   />
                   {field.state.meta.errors && (
@@ -131,7 +136,7 @@ function Login() {
                     Password
                   </label>
                   <div className="relative">
-                    <input
+                    <Input
                       id="password"
                       name={field.name}
                       value={field.state.value}
@@ -139,7 +144,7 @@ function Login() {
                       onChange={(e) => field.handleChange(e.target.value)}
                       type={showPassword ? "text" : "password"}
                       autoComplete="current-password"
-                      className="appearance-none rounded-md relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500  sm:text-sm"
+                      className="pr-10"
                       placeholder="Password"
                     />
                     <button
