@@ -5,7 +5,11 @@ import type { DecodedToken } from "@/types/DecodedToken";
 export function getStoredUser() {
   const token = localStorage.getItem("authToken");
   if (!token) return null;
-  const strBase64 = decodeBase64(token.split(".")[1]);
+
+  const parts = token.split(".");
+  if (parts.length !== 3 || !parts[1]) return null;
+
+  const strBase64 = decodeBase64(parts[1]);
   const payload: DecodedToken = JSON.parse(strBase64);
   return payload.username;
   //   return localStorage.getItem("authToken");

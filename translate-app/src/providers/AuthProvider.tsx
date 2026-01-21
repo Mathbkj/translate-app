@@ -5,15 +5,22 @@ import { getStoredUser } from "@/lib/getStoredUser";
 import { setStoredUser } from "@/lib/setStoredUser";
 import type { AuthLoginResponse } from "@/types/api/AuthLoginResponse";
 import toast from "react-hot-toast";
+import { removeStoredUser } from "@/lib/removeStoredUser";
+import { sleep } from "@/lib/utils";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<IAuthContext["auth"]["user"]>(null);
   const isAuthenticated = !!user;
 
-  const handleLogout = useCallback(() => {
-    localStorage.removeItem("authToken");
-    setStoredUser(null);
-    setUser(null);
+
+  const handleLogout = useCallback(async () => {
+    const resetUser = async () => {
+      removeStoredUser();
+      setUser({ username: null });
+      await sleep(550);
+    }
+
+    toast.promise(resetUser(), { loading: "Logging out...", success: "Logged out successfully", error: "Error logging out" });
   }, []);
 
   const handleLogin = useCallback(

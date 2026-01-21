@@ -32,7 +32,6 @@ function Login() {
   const { auth } = useAuth();
   const router = useRouter();
   const isLoading = useRouterState({ select: (s) => s.isLoading });
-  const navigate = useNavigate({ from: Route.fullPath });
   const [showPassword, setShowPassword] = useState(false);
 
   const search = Route.useSearch();
@@ -74,7 +73,6 @@ function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <Toaster position="top-right" />
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">

@@ -1,13 +1,34 @@
-import { createFileRoute } from "@tanstack/react-router";
+import TranslateApp from "@/components/translate-app";
+import { createFileRoute, isRedirect, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
-  component: Index,
+  beforeLoad: ({ context }) => {
+    const isAuthenticated = context.auth.isAuthenticated;
+    const user = context.auth.user;
+    try {
+      if (!isAuthenticated)
+        redirect({
+          to: "/login",
+          throw: true,
+          replace: true,
+          search: { redirect: "/" },
+        });
+      redirect({ to: "/", replace: true });
+      return { user };
+    } catch (err) {
+      if (isRedirect(err)) throw err;
+      redirect({
+        to: "/login",
+        throw: true,
+        search: { redirect: "/" },
+      });
+    }
+  },
+  loader: ({ context }) => {
+    return context.auth.user;
+  },
+  component: AppComponent,
 });
-
-function Index() {
-  return (
-    <div className="p-2">
-      <h3 className="text-text-primary text-2xl font-bold">Welcome Home!</h3>
-    </div>
-  );
+function AppComponent() {
+  return <TranslateApp />;
 }

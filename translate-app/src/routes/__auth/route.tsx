@@ -1,14 +1,9 @@
-import TranslateApp from "@/components/translate-app";
 import {
   createFileRoute,
   Outlet,
   redirect,
-  isRedirect,
-  useRouter,
-  useNavigate,
+  isRedirect
 } from "@tanstack/react-router";
-import toast from "react-hot-toast";
-import { useAuth } from "src/hooks/useAuth";
 
 export const Route = createFileRoute("/__auth")({
   beforeLoad: ({ context, location }) => {
@@ -28,7 +23,7 @@ export const Route = createFileRoute("/__auth")({
       redirect({
         to: "/login",
         throw: true,
-        search: { redirect: "/" },
+        search: { redirect: "" },
       });
     }
   },
