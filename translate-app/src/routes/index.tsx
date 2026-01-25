@@ -3,7 +3,7 @@ import { createFileRoute, isRedirect, redirect } from "@tanstack/react-router";
 export const Route = createFileRoute("/")({
   beforeLoad: ({ context }) => {
     const isAuthenticated = context.auth.isAuthenticated;
-    const user = context.auth.user;
+    const user = context.auth.username;
     try {
       if (!isAuthenticated)
         redirect({
@@ -24,7 +24,7 @@ export const Route = createFileRoute("/")({
     }
   },
   loader: ({ context }) => {
-    return context.auth.user;
+    return context.auth.username;
   },
   component: () => null,
 });
