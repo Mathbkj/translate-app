@@ -1,7 +1,14 @@
-import { getRouteApi, Link, redirect, useNavigate, useRouter } from "@tanstack/react-router";
+import {
+  getRouteApi,
+  Link,
+  redirect,
+  useNavigate,
+  useRouter,
+} from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Languages } from "lucide-react";
 import { useAuth } from "src/hooks/useAuth";
+import { Profile } from "./profile";
 
 export function Navbar() {
   const { auth } = useAuth();
@@ -10,8 +17,8 @@ export function Navbar() {
   const handleLogout = async () => {
     await auth.logout();
     router.invalidate();
-    // Navigate after state is cleared
     await navigate({ to: "/register" });
+    window.location.reload();
   };
 
   return (
@@ -48,6 +55,9 @@ export function Navbar() {
                   Register
                 </Link>
               </Button>
+            )}
+            {auth.isAuthenticated && (
+              <Profile username={auth.username as string | null} />
             )}
             {auth.isAuthenticated ? (
               <Button size="sm" onClick={handleLogout}>

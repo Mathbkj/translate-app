@@ -1,4 +1,3 @@
-import TranslateApp from "@/components/translate-app";
 import { createFileRoute, isRedirect, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
@@ -27,8 +26,5 @@ export const Route = createFileRoute("/")({
   loader: ({ context }) => {
     return context.auth.user;
   },
-  component: AppComponent,
+  component: () => null,
 });
-function AppComponent() {
-  return <TranslateApp />;
-}

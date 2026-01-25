@@ -5,6 +5,8 @@ import SoundFill from "../assets/sound_max_fill.svg";
 import Copy from "../assets/Copy.svg";
 import SortAlfa from "../assets/Sort_alfa.svg";
 import type { Language } from "../types/Language";
+import { ArrowDown, ChevronDown, Languages } from "lucide-react";
+import { Button } from "./ui/button";
 
 interface TranslatePanelProps {
   type: "source" | "target";
@@ -66,7 +68,7 @@ export function TranslatePanel({
       <div className="mb-4 flex flex-wrap gap-2">
         {languages.map((lang) => (
           <div key={lang.code} className="relative">
-            <button
+            <Button
               type="button"
               onClick={() => {
                 if (lang.hasDropdown && lang.subLanguages) {
@@ -75,43 +77,43 @@ export function TranslatePanel({
                   onLanguageChange(lang.code);
                 }
               }}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+              className={`${
                 !lang.hasDropdown && selectedLanguage === lang.code
-                  ? "bg-primary text-white"
+                  ? ""
                   : lang.hasDropdown &&
                       lang.subLanguages &&
                       lang.subLanguages.some(
                         (sub) => sub.code === selectedLanguage,
                       )
-                    ? "bg-primary text-white"
-                    : "text-gray-dark hover:bg-surface"
+                    ? ""
+                    : "text-gray-dark bg-accent  hover:bg-surface"
               }`}
             >
               {getDisplayName(lang)}
               {lang.hasDropdown && (
-                <img src={ExpandDown} alt="" className="ml-2 inline h-3 w-3" />
+                <ChevronDown size={14} className="inline ml-3" />
               )}
-            </button>
+            </Button>
             {lang.hasDropdown &&
               lang.subLanguages &&
               openDropdown === lang.code && (
-                <div className="absolute top-full mt-2 z-10 bg-white border border-border rounded-xl overflow-hidden shadow-lg max-h-80 overflow-y-auto">
+                <div className="absolute top-full mt-2 z-10 space-y-2 rounded-xl overflow-x-hidden shadow-lg max-h-80 overflow-y-scroll bg-white border border-border p-2">
                   {lang.subLanguages.map((subLang) => (
-                    <button
+                    <Button
                       key={subLang.code}
                       type="button"
                       onClick={() => {
                         onLanguageChange(subLang.code);
                         setOpenDropdown(null);
                       }}
-                      className={`w-full px-4 py-2 text-left text-sm font-medium transition ${
+                      className={
                         selectedLanguage === subLang.code
-                          ? "bg-primary text-white"
-                          : "text-gray-dark hover:bg-surface"
-                      }`}
+                          ? "bg-primary w-full"
+                          : "text-gray-dark bg-accent w-full hover:bg-surface"
+                      }
                     >
                       {subLang.name}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               )}
@@ -120,7 +122,7 @@ export function TranslatePanel({
       </div>
 
       {/* Text Input Area */}
-      <div className="relative border-t pt-2 border-t-border-light mb-4">
+      <div className="relative border-t pt-2 border-t-accent mb-4">
         <textarea
           value={text}
           onChange={(e) => {
@@ -138,17 +140,19 @@ export function TranslatePanel({
       {/* Bottom Controls */}
       <div className="flex h-20 items-end justify-between">
         <div className="flex gap-2">
-          <button
+          <Button
             type="button"
+            size="icon"
             onClick={() => onSpeak(text, selectedLanguage)}
             disabled={!text.trim()}
             className="flex h-10 w-10 border-2 border-border items-center justify-center rounded-xl bg-surface transition hover:bg-surface-hover disabled:opacity-40"
             title="Speak"
           >
-            <img src={SoundFill} alt="Speak" className="h-5 w-5" />
-          </button>
-          <button
+            <img src={SoundFill} alt="Speak" className="size-5" />
+          </Button>
+          <Button
             type="button"
+            size="icon"
             onClick={handleCopyClick}
             disabled={!text.trim()}
             className="flex h-10 w-10 border-2 border-border items-center justify-center rounded-xl bg-surface transition hover:bg-surface-hover disabled:opacity-40"
@@ -164,7 +168,7 @@ export function TranslatePanel({
             ) : (
               <img src={Copy} alt="Copy" />
             )} */}
-          </button>
+          </Button>
         </div>
 
         <div className="flex flex-col items-center gap-4">
@@ -175,15 +179,14 @@ export function TranslatePanel({
           )}
 
           {onTranslate && (
-            <button
+            <Button
               type="button"
               onClick={onTranslate}
               disabled={text.trim().length < 1}
-              className="flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 font-medium text-white shadow-sm transition hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <img src={SortAlfa} alt="" />
+              <Languages className="size-full" />
               Translate
-            </button>
+            </Button>
           )}
         </div>
       </div>

@@ -1,23 +1,25 @@
 import {
   createFileRoute,
+  Link,
   redirect,
-  useNavigate,
   useRouter,
   useRouterState,
 } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useState } from "react";
 import { EyeShow } from "@/components/ui/eye-show";
 import { EyeHide } from "@/components/ui/eye-hide";
-import type { AuthLoginResponse } from "@/types/api/AuthLoginResponse";
 import { useAuth } from "src/hooks/useAuth";
 import { sleep } from "@/lib/utils";
 import { Spinner } from "@/components/ui/spinner";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import GoogleLogo from "@/assets/google.svg";
+
 export const Route = createFileRoute("/__log/login")({
   validateSearch: (search) => ({
-    redirect: (search.redirect as string) || "/app",
+    redirect: (search.redirect as string) || "/",
   }),
   beforeLoad: async ({ context, search }) => {
     if (context.auth.isAuthenticated) {
@@ -145,16 +147,16 @@ function Login() {
                       className="pr-10"
                       placeholder="Password"
                     />
-                    <button
+                    <Button
                       type="button"
                       onClick={() => setShowPassword((prev) => !prev)}
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center rounded-l-none"
                       aria-label={
                         showPassword ? "Hide password" : "Show password"
                       }
                     >
                       {showPassword ? <EyeShow /> : <EyeHide />}
-                    </button>
+                    </Button>
                   </div>
                   {field.state.meta.errors && (
                     <span
@@ -168,14 +170,13 @@ function Login() {
               )}
             </form.Field>
           </div>
-
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <input
                 id="remember"
                 name="remember"
                 type="checkbox"
-                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
               />
               <label
                 htmlFor="remember"
@@ -185,29 +186,37 @@ function Login() {
               </label>
             </div>
             <div className="text-sm">
-              <a
-                href="/forgot-password"
+              <Link
+                to="/forgot-password"
                 className="font-medium text-indigo-600 hover:text-indigo-500"
               >
                 Forgot your password?
-              </a>
+              </Link>
             </div>
           </div>
-
-          <div>
+          <div className="flex flex-col items-center gap-2">
             <form.Subscribe
               selector={(state) => [state.canSubmit, state.isSubmitting]}
             >
               {([canSubmit, isSubmitting]) => (
-                <button
+                <Button
                   type="submit"
                   disabled={!canSubmit}
-                  className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="group relative w-full"
                 >
                   {isSubmitting ? <Spinner /> : "Sign in"}
-                </button>
+                </Button>
               )}
             </form.Subscribe>
+            {/* Or */}
+            {/* TODO: Implement Google Login <Button
+              type="button"
+              variant="ghost"
+              onClick={async () => await auth.loginGoogle()}
+            >
+              Continue With Google
+              <img src={GoogleLogo} className="object-cover size-full" />
+            </Button> */}
           </div>
         </form>
       </div>

@@ -1,4 +1,5 @@
 import { StrictMode } from "react";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 
@@ -19,6 +20,9 @@ const router = createRouter({
       login(username, password) {
         return Promise.resolve();
       },
+      loginGoogle() {
+        return Promise.resolve();
+      },
       logout() {
         return Promise.resolve();
       },
@@ -36,7 +40,7 @@ declare module "@tanstack/react-router" {
 }
 
 function App() {
-  const authContext = useAuth() as IAuthContext
+  const authContext = useAuth() as IAuthContext;
   return <RouterProvider router={router} context={authContext} />;
 }
 
@@ -46,9 +50,11 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </GoogleOAuthProvider>
     </StrictMode>,
   );
 }

@@ -1,8 +1,9 @@
+import TranslateApp from "@/components/translate-app";
 import {
   createFileRoute,
   Outlet,
   redirect,
-  isRedirect
+  isRedirect,
 } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/__auth")({
@@ -16,7 +17,7 @@ export const Route = createFileRoute("/__auth")({
           replace: true,
           search: { redirect: location.href },
         });
-      const user = context.auth.user;
+      const user = context.auth.username;
       return { user };
     } catch (err) {
       if (isRedirect(err)) throw err;
@@ -28,7 +29,7 @@ export const Route = createFileRoute("/__auth")({
     }
   },
   loader: ({ context }) => {
-    return context.auth.user;
+    return context.auth.username;
   },
-  component: () => <Outlet />,
+  component: () => <TranslateApp />,
 });

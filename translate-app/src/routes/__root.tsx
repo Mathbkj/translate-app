@@ -7,9 +7,9 @@ import { Toaster } from "react-hot-toast";
 const RootLayout = () => (
   <>
     <Navbar />
-    <Toaster position="top-right" />
     <Outlet />
     <TanStackRouterDevtools />
+    <Toaster position="top-left" />
   </>
 );
 

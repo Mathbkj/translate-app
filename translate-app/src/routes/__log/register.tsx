@@ -4,7 +4,7 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { useForm, useStore } from "@tanstack/react-form";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import type { AuthRegisterResponse } from "src/types/api/AuthRegisterResponse";
 import { useEffect, useState } from "react";
 import { EyeShow } from "@/components/ui/eye-show";
@@ -86,10 +86,9 @@ function Register() {
   }
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <Toaster />
       <div className="max-w-md w-full space-y-8">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-primary">
+          <h2 className="mt-6 text-center text-3xl font-extrabold">
             Create your account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">

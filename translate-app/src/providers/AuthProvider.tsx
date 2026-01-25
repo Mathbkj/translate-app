@@ -9,18 +9,18 @@ import { removeStoredUser } from "@/lib/removeStoredUser";
 import { sleep } from "@/lib/utils";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<IAuthContext["auth"]["user"]>(null);
-  const isAuthenticated = !!user;
+  const [user, setUser] = useState<IAuthContext["auth"]["username"]>(null);
 
+  const isAuthenticated = !!user;
 
   const handleLogout = useCallback(async () => {
     const resetUser = async () => {
       removeStoredUser();
-      setUser({ username: null });
+      setUser(null);
       await sleep(550);
-    }
-
-    toast.promise(resetUser(), { loading: "Logging out...", success: "Logged out successfully", error: "Error logging out" });
+    };
+    await resetUser();
+    toast.success("Logged out successfully!");
   }, []);
 
   const handleLogin = useCallback(
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
       if (data.token) {
         setStoredUser(data.token);
-        setUser({ username });
+        setUser(username);
         toast.success(data.message);
       }
     },
@@ -54,16 +54,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 
   useEffect(() => {
-    const storedUser = getStoredUser();
-    if (storedUser) {
-      setUser({ username: storedUser });
+    {
+      const storedUser = getStoredUser();
+      if (storedUser) {
+        setUser(storedUser);
+        console.log("User set from stored:", storedUser);
+      }
     }
   }, []);
+
   return (
     <AuthContext.Provider
       value={{
         auth: {
-          user,
+          username: user,
           isAuthenticated,
           login: handleLogin,
           logout: handleLogout,

@@ -16,6 +16,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      "@/assets/*":"./src/assets/*",
       "@/contexts/*": "./src/contexts/*",
       "@/components/*": "./src/components/*",
       "@/ui/*": "./src/components/ui/*",
