@@ -1,11 +1,9 @@
 import TranslateForm from "./translate-form";
-import Logo from "/logo.svg";
 
 function TranslateApp() {
   return (
-    <div className="w-full h-fit p-2.5">
-      <section className="p-2.5 flex flex-col items-center space-x-3">
-        <img src={Logo} alt="Logo" className="mx-auto mt-20 mb-20" />
+    <div className="w-full h-full p-2.5">
+      <section className="p-2.5 flex flex-col justify-start items-center space-x-3">
         <TranslateForm />
       </section>
     </div>

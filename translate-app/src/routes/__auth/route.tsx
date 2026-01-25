@@ -1,9 +1,7 @@
 import TranslateApp from "@/components/translate-app";
 import {
-  createFileRoute,
-  Outlet,
-  redirect,
-  isRedirect,
+  createFileRoute, redirect,
+  isRedirect
 } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/__auth")({

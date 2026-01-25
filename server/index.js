@@ -79,38 +79,6 @@ app.post("/login", async (req, res) => {
 
   res.status(200).json({ token, message: "Login successful" });
 });
-// POST /reset-password
-app.post("/reset-password", async (req, res) => {
-  const { username, newPassword } = req.body;
-
-  // Check if user exists
-  const { data: user, error: fetchError } = await supabase
-    .from("users")
-    .select("username")
-    .eq("username", username.trim())
-    .single();
-
-  if (!user || fetchError) {
-    return res.status(404).json({ message: "User not found" });
-  }
-
-  // Hash the new password
-  const hashedPassword = await bcrypt.hash(newPassword.trim(), 10);
-
-  // Update the password in the database
-  const { error: updateError } = await supabase
-    .from("users")
-    .update({ hashed_pass: hashedPassword })
-    .eq("username", username.trim());
-
-  if (updateError) {
-    return res.status(500).json({
-      message: "Failed to reset password. Please try again.",
-    });
-  }
-
-  res.status(200).json({ message: "Password reset successfully" });
-});
 // POST /logout
 app.post("/logout", authToken, (req, res) => {
   req.logOut();
@@ -120,6 +88,6 @@ app.post("/logout", authToken, (req, res) => {
 app.get("/verify", authToken, (_req, res) => {
   res.status(200).json({ message: "Token succesfully validated" });
 });
-app.listen(process.env.PORT, (error) => {
+app.listen(process.env.PORT, error => {
   if (error) console.error(error.message);
 });
