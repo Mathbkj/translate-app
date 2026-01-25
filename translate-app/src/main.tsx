@@ -20,14 +20,11 @@ const router = createRouter({
       login(username, password) {
         return Promise.resolve();
       },
-      loginGoogle() {
-        return Promise.resolve();
-      },
       logout() {
         return Promise.resolve();
       },
       isAuthenticated: false,
-      user: null,
+      username: null,
     }, // Will be provided in React component
   },
 });
