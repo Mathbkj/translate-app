@@ -9,7 +9,7 @@ import type { AuthRegisterResponse } from "src/types/api/AuthRegisterResponse";
 import { useEffect, useState } from "react";
 import { EyeShow } from "@/components/ui/eye-show";
 import { EyeHide } from "@/components/ui/eye-hide";
-import { Loader } from "lucide-react";
+import { Loader, Mail } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,7 @@ function Register() {
   const form = useForm({
     defaultValues: {
       username: "",
+      email: "",
       password: "",
       confirmPassword: "",
     },
@@ -37,6 +38,11 @@ function Register() {
 
         if (value.username.trim().length < 1) {
           errors.username = "Username is required";
+        }
+        if (value.email.trim().length < 1) {
+          errors.email = "Email is required";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.email)) {
+          errors.email = "Please enter a valid email address";
         }
         if (value.password.trim().length < 6) {
           errors.password = "Password must be at least 6 characters";
@@ -57,6 +63,7 @@ function Register() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               username: value.username,
+              email: value.email,
               password: value.confirmPassword,
             }),
           },
@@ -75,7 +82,9 @@ function Register() {
 
         toast.success(body.message);
         setTimeout(() => {
-          navigate({ to: "/login", search: { redirect: "/" } });
+          navigate({
+            to: `/verification/${encodeURIComponent(value.email)}`,
+          });
         }, 1000);
       },
     },
@@ -139,6 +148,32 @@ function Register() {
               )}
             </form.Field>
 
+            {/* Email Field */}
+            <form.Field name="email">
+              {(field) => (
+                <div>
+                  <Input
+                    id="email"
+                    name={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    type="email"
+                    placeholder="Email"
+                  />
+
+                  {field.state.meta.errors && (
+                    <span
+                      aria-live="assertive"
+                      className="text-error text-sm mt-1"
+                    >
+                      {field.state.meta.errors.join(", ")}
+                    </span>
+                  )}
+                </div>
+              )}
+            </form.Field>
+
             {/* Password Field */}
             <form.Field name="password">
               {(field) => (
@@ -158,16 +193,16 @@ function Register() {
                       className="pr-10"
                       placeholder="Password"
                     />
-                    <button
+                    <Button
                       type="button"
                       onClick={() => setShowPassword((prev) => !prev)}
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
+                      className="absolute inset-y-0 right-0 flex items-center rounded-l-none"
                       aria-label={
                         showPassword ? "Hide password" : "Show password"
                       }
                     >
                       {showPassword ? <EyeShow /> : <EyeHide />}
-                    </button>
+                    </Button>
                   </div>
                   {field.state.meta.errors && (
                     <span
@@ -203,18 +238,18 @@ function Register() {
                       className="pr-10"
                       placeholder="Confirm Password"
                     />
-                    <button
+                    <Button
                       type="button"
                       onClick={() =>
                         setShowConfirmPassword(!showConfirmPassword)
                       }
-                      className="absolute inset-y-0 right-0 pr-3 flex not-disabled:cursor-pointer items-center text-gray-500 hover:text-gray-700"
+                      className="absolute inset-y-0 right-0 flex items-center rounded-l-none"
                       aria-label={
                         showConfirmPassword ? "Hide password" : "Show password"
                       }
                     >
                       {showConfirmPassword ? <EyeShow /> : <EyeHide />}
-                    </button>
+                    </Button>
                   </div>
                   {field.state.meta.errors && (
                     <span

@@ -5,6 +5,7 @@ var jwtVerify = require("jose").jwtVerify;
 var SignJWT = require("jose").SignJWT;
 var bcrypt = require("bcrypt");
 var supabase = require("./db/client.js").supabase;
+var { Resend } = require("resend");
 var app = express();
 
 // CORS and JSON parsing must come before any routes
@@ -18,7 +19,6 @@ app.use(
 
 const textEncoder = new TextEncoder();
 const secret = textEncoder.encode(process.env.JWT_SECRET);
-
 /* Middleware Function -> Check whether the user is allowed to access protected routes, in
  other words, verify if the user is authenticated to access the protected resource*/
 async function authToken(req, res, next) {
@@ -41,6 +41,7 @@ app.post("/register", async (req, res) => {
   const { username, password } = req.body;
   // Hash the password before storing it in the database
   const hashedPassword = await bcrypt.hash(password.trim(), 10);
+
   // Store the new user in the database
   const { error } = await supabase
     .from("users")
@@ -84,10 +85,11 @@ app.post("/logout", authToken, (req, res) => {
   req.logOut();
   res.status(200).json({ message: "Logout successful" });
 });
+
 // GET /verify
 app.get("/verify", authToken, (_req, res) => {
   res.status(200).json({ message: "Token succesfully validated" });
 });
-app.listen(process.env.PORT, error => {
+app.listen(process.env.PORT, (error) => {
   if (error) console.error(error.message);
 });

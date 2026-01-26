@@ -15,7 +15,6 @@ import { sleep } from "@/lib/utils";
 import { Spinner } from "@/components/ui/spinner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import GoogleLogo from "@/assets/google.svg";
 
 export const Route = createFileRoute("/__log/login")({
   validateSearch: (search) => ({
@@ -171,8 +170,7 @@ function Login() {
             </form.Field>
           </div>
           <div className="flex items-center justify-between">
-            <div className="flex items-center">
-            </div>
+            <div className="flex items-center"></div>
           </div>
           <div className="flex flex-col items-center gap-2">
             <form.Subscribe
